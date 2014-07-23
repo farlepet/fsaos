@@ -1,18 +1,18 @@
 ; Sets the GDT
 set_gdt:
-	mov eax, gdt		; Move location of GDT into eax
-	mov [gdtr + 2], eax	; ... then into gdtr.base
-	mov eax, gdt_end	; Move the end of the GDT into eax
-	sub eax, gdt		; ... subtract the location of GDT to get the length
-	mov [gdtr], ax		; ... and move it into gdtr.limit
+	;mov eax, gdt		; Move location of GDT into eax
+	;mov [gdtr + 2], eax	; ... then into gdtr.base
+	;mov eax, gdt_end	; Move the end of the GDT into eax
+	;sub eax, gdt		; ... subtract the location of GDT to get the length
+	;mov [gdtr], ax		; ... and move it into gdtr.limit
 	lgdt [gdtr]			; Load the GDT
 	ret					; Return
 
 ; Data
 
 gdtr:
-	DW 0 ; Limit
-	DD 0 ; Base
+	dw gdt_end - gdt 	; Limit
+	dd gdt 				; Base
 
 
 gdt:
