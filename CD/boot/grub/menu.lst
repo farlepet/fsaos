@@ -1,0 +1,8 @@
+serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1
+terminal --timeout=15 serial console
+
+default 0
+timeout 5
+
+title FSAOS
+    kernel /kernel.bin
