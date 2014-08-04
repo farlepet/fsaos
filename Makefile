@@ -3,7 +3,6 @@ MAINDIR		= $(CURDIR)
 ASM			= nasm
 
 ASMFLAGS	= -f bin -w+all -ikernel/src/
-LDFLAGS		= -m elf_i386 -Tkernel.ld
 
 .PHONY: all clean
 

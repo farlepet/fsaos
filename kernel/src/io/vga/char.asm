@@ -44,11 +44,12 @@ vga_print:
 	ret				; Return
 
 
-
 ; Data
-vga_height: dd 25		; Current height
-vga_width:	dd 80		; Current width
+vga_height: 	dd 25		; Current height
+vga_width:		dd 80		; Current width
 
-vga_size:	dd 80*25	; Size of VGA screen
-vga_ptr:	dd 0xB8000	; Pointer to VGA memory
-vga_stride:	dd 80*2		; Stride of VGA screen in bytes
+vga_size:		dd 80*25	; Size of VGA screen
+vga_ptr:		dd 0xB8000	; Pointer to VGA memory
+vga_stride:		dd 80*2		; Stride of VGA screen in bytes
+
+vga_hexprefix: db "0x", 0 	; Prefix to add when printing a hexadecimal number
