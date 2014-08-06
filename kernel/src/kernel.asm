@@ -17,17 +17,7 @@ kernel:
 
 	sti 					; Set the interrupt flag
 
-	mov ecx, 0x20
-	mov eax, 0xFEAD0000
-  .loop:
-	call vga_printnum_hex
-	call vga_newline
-	inc eax
-	loop .loop
-
-	mov	 esi, welcomeMsg	; Load the welcome message
-	call vga_print			; Print it
-	call vga_print			; Print it
+	call ps2_keyb_init		; Initialize the PS/2 keyboard
 
   .halt:					; Kernel is done executing, so just halt
 	hlt
@@ -38,9 +28,8 @@ kernel:
 ; Includes ;
 ;;;;;;;;;;;;
 
-; Video includes
-%include "io/vga/char.asm"
-%include "io/vga/vga_put.asm"
+; I/O
+%include "io/io.asm"
 
 ; MM includes
 %include "mm/gdt.asm"
