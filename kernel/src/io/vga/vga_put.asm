@@ -41,7 +41,7 @@ vga_put:
 	cmp ebx, DWORD[vga_height]	; Check that it is not over-flowing
 	jl .done					; It is not
 
-	; TODO: Implement scrolling!!!
+	call vga_scroll
 	dec DWORD[vga_row]			; Decrement it by one
     jmp .done                   ; Were done now
 
@@ -62,6 +62,52 @@ vga_put:
 	pop ebx
 	ret						; We're done here, return
 
+
+; Advances to the next line
+vga_newline:
+	push ebx 					; Store EBX
+	mov DWORD[vga_col], 0		; Move char position back to right
+	inc DWORD[vga_row]			; And increment the row by one
+	mov ebx, DWORD[vga_row]		; Move vga_row to ebx
+	cmp ebx, DWORD[vga_height]	; Check that it is not over-flowing
+	jl .done					; It is not
+
+	call vga_scroll
+	dec DWORD[vga_row]			; Decrement it by one
+
+  .done:
+	pop ebx 					; Restore EAX
+	ret 						; Return
+
+
+; Scrolls the console one line up and clears the last line
+vga_scroll:
+	push esi 					; Store ESI
+	push edi 					; Store EDI
+	push ecx					; Store ECX
+	push eax 					; Store EAX
+
+	mov esi, DWORD [vga_ptr]	; Source = VGA_PTR...
+	add esi, DWORD [vga_stride]	; ... + VGA_STRIDE
+	mov edi, DWORD [vga_ptr] 	; Dest = VGA_PTR
+	mov ecx, DWORD [vga_bytes]	; N_DWORDS = (VGA_SIZE...
+	add ecx, DWORD [vga_stride]	; ... - VGA_STRIDE)...
+	shr ecx, 2					; ... / 4
+	cld							; Clear direction flag so values increment
+rep movsd						; Copy the video memory
+
+	mov esi, DWORD [vga_end] 	; Dest = VGA_END...
+	sub esi, DWORD [vga_stride]	; ... - VGA_STRIDE
+	xor eax, eax 				; Value = 0
+	mov ecx, DWORD [vga_stride]	; N_DWORDS = VGA_STRIDE...
+	shr ecx, 2 					; ... / 4
+rep stosd						; Clear last line of VGA memory
+
+	pop eax 					; Restore EAX
+	pop ecx 					; Restore ECX
+	pop edi 					; Restore EDI
+	pop esi 					; Restore ESI
+	ret 						; Return
 
 ; Data
 vga_row: dd 0			; Current row

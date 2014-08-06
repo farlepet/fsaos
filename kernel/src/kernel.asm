@@ -13,11 +13,20 @@ kernel:
 	call set_idt			; Set the IDT
 	call remap_pic			; Remap the IRQ's
 
-	sti 					; Set the interrupt flag
-
 	call vga_clear			; Clear the screen
 
+	sti 					; Set the interrupt flag
+
+	mov ecx, 0x20
+	mov eax, 0xFEAD0000
+  .loop:
+	call vga_printnum_hex
+	call vga_newline
+	inc eax
+	loop .loop
+
 	mov	 esi, welcomeMsg	; Load the welcome message
+	call vga_print			; Print it
 	call vga_print			; Print it
 
   .halt:					; Kernel is done executing, so just halt

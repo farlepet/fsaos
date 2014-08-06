@@ -16,19 +16,8 @@ set_base_handlers:
 	set_interrupt 0x0E, int_pagefault
 	set_interrupt 0x10, int_floatingpt
 
-	; Set some dummy IRQ handlers
-	mov ax, 0x00F0		; First IRQ is at 0xF0
-	mov ebx, irq_dummy	; Load pointer to the dummy IRQ handler
-  .loop:
-	cmp ax, 0x0100		; Check if we have set all 16
-	je .end 			; ...if so, we are done, so exit the loop
-	call idt_set_int	; Else set the interrupt descriptor
-	inc ax 				; ...and increment AX to move on to the next one
-  .end:
 	ret 				; Return
 
-irq_dummy:
-	iret
 
 int_div_0:								; Division by 0 exception
 	push esi							; Store ESI

@@ -25,5 +25,8 @@ remap_pic:
 	pic_write PIC1_DATA, 0x01				; 8086 mode
 	pic_write PIC2_DATA, 0x01				; 8086 mode
 
+	pic_write PIC1_DATA, 0xFF				; Disable IRQ's 0-7
+	pic_write PIC2_DATA, 0xFF				; Disable IRQ's 8-15
+
 	pop ax 									; Restore AX
 	ret 									; Return
