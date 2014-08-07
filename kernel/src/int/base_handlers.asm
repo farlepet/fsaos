@@ -59,7 +59,8 @@ int_invop:								; Invalid Opcode exception
 	mov esi, invop_msg					; Move string pointer to ESI
 	call vga_print						; Print the string
 	pop esi 							; Restore ESI
-	iret								; Return from interrupt
+	cli									; Clear interrupts
+	hlt									; Halt
 
 int_devnavail:							; Device not available exception
 	push esi							; Store ESI

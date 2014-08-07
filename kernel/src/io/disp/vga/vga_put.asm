@@ -59,6 +59,8 @@ vga_put:
     je .done                    ; Skip the comming code
 
   .done:
+  	call vga_cursor_move
+
 	pop ebx
 	ret						; We're done here, return
 
@@ -108,6 +110,41 @@ rep stosd						; Clear last line of VGA memory
 	pop edi 					; Restore EDI
 	pop esi 					; Restore ESI
 	ret 						; Return
+
+
+; Move the VGA cursor to the current position
+vga_cursor_move:
+	push eax
+	push ebx
+	push edx
+
+	mov ax, [vga_row]	; Value = VGA_ROW...
+	mov bl, [vga_width]
+	mul bl				; ... * VGA_WIDTH...
+	add ax, [vga_col]	; ... + VGA_COL
+	mov bx, ax			; Store Value
+
+	mov dx, 0x03D4		; Port  = 0x0384
+	mov al, 0x0F		; Value = 0x0F
+	out dx, al 			; Get ready to write first location byte
+
+	mov dx, 0x03D5		; Port  = 0x0385
+	mov ax, bx			; Value = location(0..7)
+	out dx, al 			; Write low word of location
+
+	mov dx, 0x03D4		; Port  = 0x0384
+	mov al, 0x0E		; Value = 0x0E
+	out dx, al 			; Get readt to write second location byte
+
+	mov dx, 0x03D5		; Port  = 0x0385
+	mov al, bh			; Value = location(8..15)
+	out dx, al 			; Write high word of location
+
+	pop edx
+	pop ebx
+	pop eax
+
+	ret 				; Return
 
 ; Data
 vga_row: dd 0			; Current row
