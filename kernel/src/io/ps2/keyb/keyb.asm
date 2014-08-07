@@ -36,6 +36,7 @@ ps2_keyb_init:
   .pass:							; We passed!
 	mov esi, ps2_keyb_init_pass_msg	; Here is a string saying so
 	call vga_print					; Let's print it
+	call enable_ps2_keyb_irq
 	jmp .done						; Now we are done
 
   .fail:							; We failed!
@@ -45,6 +46,8 @@ ps2_keyb_init:
   .done:							; We are done
 	ret 							; ... Return
 
+; IRQ handler:
+%include "io/ps2/keyb/irq.asm"
 
 ; Data
 ps2_keyb_init_fail_msg:	db "Failed to initialize PS/2 keyboard!", 10, 0
